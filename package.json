@@ -1,0 +1,26 @@
+{
+  "name": "associations-in-sequelize",
+  "version": "1.0.0",
+  "description": "I wanna test associations in sequelize in this repo. &amp; you can find more details about this repo in my virgool.io acount (node.js.developer.kh)",
+  "main": "sequelize.js",
+  "dependencies": {
+    "pg": "^8.5.1",
+    "sequelize": "^6.3.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start-test1": "node test1/index.js",
+    "start-test2": "node test2/index.js",
+    "start-test3": "node test3/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nodejsdeveloperskh/associations-in-sequelize.git"
+  },
+  "author": "MJB-Khorasani",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nodejsdeveloperskh/associations-in-sequelize/issues"
+  },
+  "homepage": "https://github.com/nodejsdeveloperskh/associations-in-sequelize#readme"
+}
