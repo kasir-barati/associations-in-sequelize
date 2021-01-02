@@ -17,4 +17,10 @@ Asset.init(
   }
 );
 
+module.exports.alias = {
+  productPrimaryAsset: "ProductHasPrimaryAssetId",
+  primaryAsset: "AssetIsPrimaryAssetFor",
+  products: "ProductHasAssetIds",
+};
+
 module.exports = Asset;
