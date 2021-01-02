@@ -2,7 +2,12 @@ const { DataTypes, Model } = require("sequelize");
 
 const sequelize = require("../sequelize");
 
-class Asset extends Model {}
+class Asset extends Model {
+  static alias = {
+    productPrimaryAsset: "ProductHasPrimaryAssetId",
+    products: "ProductHasAssetIds",
+  };
+}
 Asset.init(
   {
     id: {
@@ -16,10 +21,5 @@ Asset.init(
     sequelize: sequelize.getSeq(),
   }
 );
-
-module.exports.alias = {
-  productPrimaryAsset: "ProductHasPrimaryAssetId",
-  products: "ProductHasAssetIds",
-};
 
 module.exports = Asset;
