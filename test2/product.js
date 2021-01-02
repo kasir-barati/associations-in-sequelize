@@ -27,11 +27,11 @@ module.exports.alias = {
 };
 
 Product.belongsTo(Asset, {
-  as: "PrimaryAsset",
+  as: Asset.alias.productPrimaryAsset,
   foreignKey: "primaryAssetId",
 });
 Asset.hasOne(Product, {
-  as: "isPrimaryAssetFor",
+  as: Asset.alias.primaryAsset,
   foreignKey: "primaryAssetId",
 });
 
