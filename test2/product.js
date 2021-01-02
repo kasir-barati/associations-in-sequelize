@@ -24,14 +24,15 @@ Product.init(
 
 module.exports.alias = {
   assets: "AssetHasProductId",
+  primaryAsset: "AssetIsPrimaryAssetFor",
 };
 
 Product.belongsTo(Asset, {
-  as: Asset.alias.productPrimaryAsset,
+  as: Product.alias.primaryAsset,
   foreignKey: "primaryAssetId",
 });
 Asset.hasOne(Product, {
-  as: Asset.alias.primaryAsset,
+  as: Asset.alias.productPrimaryAsset,
   foreignKey: "primaryAssetId",
 });
 
