@@ -22,6 +22,10 @@ Product.init(
   }
 );
 
+module.exports.alias = {
+  assets: "AssetHasProductId",
+};
+
 Product.belongsTo(Asset, {
   as: "PrimaryAsset",
   foreignKey: "primaryAssetId",
