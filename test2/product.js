@@ -15,7 +15,6 @@ Product.init(
     name: DataTypes.STRING,
     primaryAssetId: {
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
     },
   },
   {
@@ -23,12 +22,16 @@ Product.init(
   }
 );
 
+module.exports.alias = {
+  assets: "AssetHasProductId",
+};
+
 Product.belongsTo(Asset, {
-  as: "PrimaryAsset",
+  as: Asset.alias.productPrimaryAsset,
   foreignKey: "primaryAssetId",
 });
 Asset.hasOne(Product, {
-  as: "isPrimaryAssetFor",
+  as: Asset.alias.primaryAsset,
   foreignKey: "primaryAssetId",
 });
 

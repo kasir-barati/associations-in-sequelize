@@ -24,13 +24,13 @@ ProductAsset.init(
 );
 
 Asset.belongsToMany(Product, {
-  as: "assetProduct",
+  as: Asset.alias.products,
   through: ProductAsset,
   foreignKey: "assetId",
   otherKey: "productId",
 });
 Product.belongsToMany(Asset, {
-  as: "productAsset",
+  as: Product.alias.assets,
   through: ProductAsset,
   otherKey: "assetId",
   foreignKey: "productId",
