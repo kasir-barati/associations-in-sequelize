@@ -15,7 +15,6 @@ Product.init(
     name: DataTypes.STRING,
     primaryAssetId: {
       type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
     },
   },
   {
