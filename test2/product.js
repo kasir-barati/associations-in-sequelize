@@ -24,6 +24,7 @@ Product.init(
 
 module.exports.alias = {
   assets: "AssetHasProductId",
+  primaryAsset: "AssetIsPrimaryAssetFor",
 };
 
 Product.belongsTo(Asset, {
