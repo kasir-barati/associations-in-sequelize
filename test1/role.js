@@ -7,6 +7,10 @@ class Role extends Model {
     id: "id",
     name: "name",
   };
+  static alias = {
+    user: "RoleHasUsers",
+  };
+}
 Role.init(
   {
     [Role.col.id]: {
