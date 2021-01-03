@@ -36,6 +36,7 @@ User.belongsTo(Role, {
 });
 Role.hasMany(User, {
   as: Role.alias.user,
+  foreignKey: User.col.roleId,
 });
 
 module.exports = User;
