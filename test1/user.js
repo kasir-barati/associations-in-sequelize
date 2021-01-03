@@ -3,11 +3,16 @@ const { DataTypes, Model } = require("sequelize");
 const Role = require("./role");
 const sequelize = require("../sequelize");
 
+class User extends Model {
   static col = {
     id: "id",
     name: "name",
     roleId: "roleId",
   };
+  static alias = {
+    role: "UserRole",
+  };
+}
 User.init(
   {
     [User.col.id]: {
@@ -25,8 +30,8 @@ User.init(
     sequelize: sequelize.getSeq(),
   }
 );
-
 User.belongsTo(Role, {
+  as: User.alias.role,
   foreignKey: User.col.roleId,
 });
 Role.hasMany(User, {
