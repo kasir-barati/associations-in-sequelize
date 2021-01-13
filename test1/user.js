@@ -8,7 +8,7 @@ class User extends Model {
     email: "email",
     fullname: "fullname",
     password: "password",
-    roleId: "roleId",
+    phoneId: "phoneId",
   };
   static alias = {
     roles: "UserRoles",
