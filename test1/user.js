@@ -1,6 +1,5 @@
 const { DataTypes, Model } = require("sequelize");
 
-const Role = require("./role");
 const sequelize = require("../sequelize");
 
 class User extends Model {}
@@ -17,13 +16,5 @@ User.init(
     sequelize: sequelize.getSeq(),
   }
 );
-
-User.belongsTo(Role, {
-  as: "UserHasRole",
-  foreignKey: "RoleId",
-});
-Role.hasMany(User, {
-  as: "Users",
-});
 
 module.exports = User;
