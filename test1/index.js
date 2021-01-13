@@ -6,12 +6,53 @@ const Permission = require("./permission");
 const Role = require("./role");
 const Attribute = require("./attribute");
 const Resource = require("./resource");
+const Phone = require("./phone");
+
+// const resourceSeeder = require("./data/resource");
+// const attributeSeeder = require("./data/attribute");
 
 sequelize
   .getSeq()
   .sync({ force: true })
   .then(async () => {
     await seedPostgre();
+    let permissions = await Permission.findAll({
+      attributes: [Permission.col.access, Permission.col.own],
+      include: [
+        {
+          model: Attribute,
+          attributes: [Attribute.col.title],
+          as: Permission.alias.attributes,
+          include: [
+            {
+              model: Resource,
+              attributes: [Resource.col.title],
+              as: Attribute.alias.resource,
+            },
+          ],
+        },
+        {
+          model: Role,
+          attributes: [Role.col.id],
+          as: Permission.alias.roles,
+        },
+      ],
+    });
+    let perms = {};
+    permissions.forEach((permission) => {
+      // prettier-ignore
+      perms[
+        `${permission[Permission.alias.attributes][Attribute.alias.resource][Resource.col.title]
+        }${permission[Permission.alias.attributes][Attribute.col.title]
+        }${permission[Permission.col.access]}`
+      ] = permission[Permission.alias.roles].reduce((acc, curr) => {
+        let roles = {
+          [curr[Role.col.id]]: permission[Permission.col.own],
+          ...acc,
+        };
+        return roles;
+      }, {});
+    });
     // await Attribute.destroy({
     //   where: {
     //     [Attribute.col.title]: "title",
@@ -37,45 +78,56 @@ sequelize
   .catch(console.error);
 
 async function seedPostgre() {
+  // await resourceSeeder();
+  // await attributeSeeder();
   let adminRole = await Role.create({
     [Role.col.name]: "admin",
+    [Role.col.isBasic]: true,
+  });
+  let supportRole = await Role.create({
+    [Role.col.name]: "support",
     [Role.col.isBasic]: true,
   });
   let userRole = await Role.create({
     [Role.col.name]: "user",
     [Role.col.isBasic]: true,
   });
-  let productResource = await Resource.create({
-    [Resource.col.title]: "product",
+  let roleResource = await Resource.create({
+    [Resource.col.title]: "role",
   });
-  let attributeProductResource = await Attribute.create({
-    [Attribute.col.title]: "title",
-    [Attribute.col.resourceId]: productResource[Resource.col.id],
+  let attributeNameRoleResource = await Attribute.create({
+    [Attribute.col.title]: "name",
+    [Attribute.col.resourceId]: roleResource[Resource.col.id],
   });
-  let readProductTitlePermission = await Permission.create({
+  let readRoleNamePermission = await Permission.create({
     [Permission.col.own]: false,
     [Permission.col.access]: "read",
-    [Permission.col.attributeId]: attributeProductResource[Attribute.col.id],
+    [Permission.col.attributeId]: attributeNameRoleResource[Attribute.col.id],
   });
-  let updateProductTitlePermission = await Permission.create({
+  let updateRoleNamePermission = await Permission.create({
     [Permission.col.own]: false,
     [Permission.col.access]: "update",
-    [Permission.col.attributeId]: attributeProductResource[Attribute.col.id],
+    [Permission.col.attributeId]: attributeNameRoleResource[Attribute.col.id],
   });
   await RolePermission.create({
     [RolePermission.col.roleId]: adminRole[Role.col.id],
     [RolePermission.col.permissionId]:
-      readProductTitlePermission[Permission.col.id],
+      readRoleNamePermission[Permission.col.id],
   });
   await RolePermission.create({
     [RolePermission.col.roleId]: userRole[Role.col.id],
     [RolePermission.col.permissionId]:
-      readProductTitlePermission[Permission.col.id],
+      readRoleNamePermission[Permission.col.id],
+  });
+  await RolePermission.create({
+    [RolePermission.col.roleId]: supportRole[Role.col.id],
+    [RolePermission.col.permissionId]:
+      readRoleNamePermission[Permission.col.id],
   });
   await RolePermission.create({
     [RolePermission.col.roleId]: adminRole[Role.col.id],
     [RolePermission.col.permissionId]:
-      updateProductTitlePermission[Permission.col.id],
+      updateRoleNamePermission[Permission.col.id],
   });
   let adminUser = await User.create({
     [User.col.email]: "admin@gmail.com",
