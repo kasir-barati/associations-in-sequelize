@@ -1,3 +1,4 @@
+const access = require("./access.json");
 const sequelize = require("../sequelize");
 const User = require("./user");
 const UserRole = require("./user-role");
@@ -17,7 +18,7 @@ sequelize
   .then(async () => {
     await seedPostgre();
     let permissions = await Permission.findAll({
-      attributes: [Permission.col.access, Permission.col.own],
+      attributes: [Permission.col.access],
       include: [
         {
           model: Attribute,
@@ -39,6 +40,7 @@ sequelize
       ],
     });
     let perms = {};
+
     permissions.forEach((permission) => {
       // prettier-ignore
       perms[
@@ -47,12 +49,31 @@ sequelize
         }${permission[Permission.col.access]}`
       ] = permission[Permission.alias.roles].reduce((acc, curr) => {
         let roles = {
-          [curr[Role.col.id]]: permission[Permission.col.own],
+          [curr[Role.col.id]]: curr[RolePermission.name][RolePermission.col.own],
           ...acc,
         };
         return roles;
       }, {});
     });
+    console.log(perms);
+    // const requiredPermission = "rolenameread";
+    // console.log(
+    //   perms[requiredPermission]["acf5af7e-f330-47d6-bd0c-ce129d5c5b7b"]
+    // );
+    // console.log(perms);
+
+    // let users = User.findAll({
+    //   include: [
+    //     {
+    //       model: Role,
+    //       as: User.alias.roles,
+    //       attributes: [Role.col.id],
+    //     },
+    //   ],
+    // });
+    // (await users).forEach((user) => {
+    //   user[User.alias.roles];
+    // });
     // await Attribute.destroy({
     //   where: {
     //     [Attribute.col.title]: "title",
@@ -100,34 +121,36 @@ async function seedPostgre() {
     [Attribute.col.resourceId]: roleResource[Resource.col.id],
   });
   let readRoleNamePermission = await Permission.create({
-    [Permission.col.own]: false,
-    [Permission.col.access]: "read",
+    [Permission.col.access]: access.read,
     [Permission.col.attributeId]: attributeNameRoleResource[Attribute.col.id],
   });
   let updateRoleNamePermission = await Permission.create({
-    [Permission.col.own]: false,
-    [Permission.col.access]: "update",
+    [Permission.col.access]: access.update,
     [Permission.col.attributeId]: attributeNameRoleResource[Attribute.col.id],
   });
   await RolePermission.create({
     [RolePermission.col.roleId]: adminRole[Role.col.id],
     [RolePermission.col.permissionId]:
       readRoleNamePermission[Permission.col.id],
+    [RolePermission.col.own]: true,
   });
   await RolePermission.create({
     [RolePermission.col.roleId]: userRole[Role.col.id],
     [RolePermission.col.permissionId]:
       readRoleNamePermission[Permission.col.id],
+    [RolePermission.col.own]: false,
   });
   await RolePermission.create({
     [RolePermission.col.roleId]: supportRole[Role.col.id],
     [RolePermission.col.permissionId]:
       readRoleNamePermission[Permission.col.id],
+    [RolePermission.col.own]: false,
   });
   await RolePermission.create({
     [RolePermission.col.roleId]: adminRole[Role.col.id],
     [RolePermission.col.permissionId]:
       updateRoleNamePermission[Permission.col.id],
+    [RolePermission.col.own]: true,
   });
   let adminUser = await User.create({
     [User.col.email]: "admin@gmail.com",
