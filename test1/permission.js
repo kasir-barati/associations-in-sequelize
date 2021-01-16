@@ -2,6 +2,7 @@ const { DataTypes, Model } = require("sequelize");
 
 const sequelize = require("../sequelize");
 const Attribute = require("./attribute");
+const access = require("./access.json");
 
 class Permission extends Model {
   static col = {
@@ -24,11 +25,7 @@ Permission.init(
       defaultValue: DataTypes.UUIDV4,
     },
     [Permission.col.access]: {
-      type: DataTypes.ENUM("create", "read", "update", "delete"),
-      allowNull: false,
-    },
-    [Permission.col.own]: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.ENUM(Object.values(access)),
       allowNull: false,
     },
     [Permission.col.attributeId]: {
