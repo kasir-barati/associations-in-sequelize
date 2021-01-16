@@ -6,13 +6,18 @@ const Role = require("./role");
 
 class RolePermission extends Model {
   static col = {
-    permissionId: "permissionId",
+    own: "own",
     roleId: "roleId",
+    permissionId: "permissionId",
   };
 }
 
 RolePermission.init(
   {
+    [RolePermission.col.own]: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
     [RolePermission.col.roleId]: {
       primaryKey: true,
       type: DataTypes.UUID,

@@ -7,7 +7,6 @@ const access = require("./access.json");
 class Permission extends Model {
   static col = {
     id: "id",
-    own: "own",
     access: "access",
     attributeId: "attributeId",
   };
