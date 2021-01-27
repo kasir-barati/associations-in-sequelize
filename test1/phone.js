@@ -1,6 +1,7 @@
 const { Model, DataTypes } = require("sequelize");
 
 const User = require("./user");
+
 const sequelize = require("../sequelize");
 
 class Phone extends Model {
@@ -10,22 +11,22 @@ class Phone extends Model {
     userId: "userId",
   };
   static alias = {
-    user: "userPhone",
+    user: "PhoneBelongsToUser",
   };
 }
 
 Phone.init(
   {
-    id: {
+    [Phone.col.id]: {
       primaryKey: true,
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
     },
-    phone: {
+    [Phone.col.phone]: {
       unique: true,
       type: DataTypes.STRING,
     },
-    userId: {
+    [Phone.col.userId]: {
       type: DataTypes.UUID,
       references: {
         model: User,
@@ -43,6 +44,7 @@ Phone.belongsTo(User, {
   as: Phone.alias.user,
   foreignKey: Phone.col.userId,
 });
+
 User.hasMany(Phone, {
   as: User.alias.phones,
   foreignKey: Phone.col.userId,

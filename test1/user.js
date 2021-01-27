@@ -12,7 +12,7 @@ class User extends Model {
   };
   static alias = {
     roles: "UserRoles",
-    phones: "UserPhones",
+    phones: "UserHasManyPhone",
   };
 }
 
